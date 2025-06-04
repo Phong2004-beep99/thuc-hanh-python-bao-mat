@@ -3,24 +3,17 @@ from cipher.caesar import CaesarCipher
 from cipher.vigenere.vigenere_cipher import VigenereCipher
 from cipher.railfence.railfence_cipher import RailFenceCipher
 from cipher.playfair.playfair_cipher import PlayfairCipher
-from cipher.transposition.transposition_cipher import TranspositionCipher
-
-
-
-
 
 app = Flask(__name__)
+
+# Khởi tạo các đối tượng cố định (ngoại trừ Playfair phải khởi tạo theo key người dùng)
 caesar = CaesarCipher()
 vigenere_cipher = VigenereCipher()
 railfence_cipher = RailFenceCipher()
-playfair_cipher = PlayfairCipher("HUTECH")  
-trans_cipher = TranspositionCipher()
 
-
-
-
+# Caesar Cipher
 @app.route("/api/caesar/encrypt", methods=["POST"])
-def encrypt():
+def caesar_encrypt():
     data = request.json
     plain_text = data["plain_text"]
     key = int(data["key"])
@@ -28,13 +21,15 @@ def encrypt():
     return jsonify({"encrypted_message": encrypted})
 
 @app.route("/api/caesar/decrypt", methods=["POST"])
-def decrypt():
+def caesar_decrypt():
     data = request.json
     cipher_text = data["cipher_text"]
     key = int(data["key"])
     decrypted = caesar.decrypt_text(cipher_text, key)
     return jsonify({"decrypted_message": decrypted})
 
+
+# Vigenère Cipher
 @app.route("/api/vigenere/encrypt", methods=["POST"])
 def vigenere_encrypt():
     data = request.json
@@ -51,6 +46,8 @@ def vigenere_decrypt():
     decrypted = vigenere_cipher.decrypt(cipher_text, key)
     return jsonify({"decrypted_message": decrypted})
 
+
+# Rail Fence Cipher
 @app.route("/api/railfence/encrypt", methods=["POST"])
 def railfence_encrypt():
     data = request.json
@@ -67,34 +64,24 @@ def railfence_decrypt():
     decrypted = railfence_cipher.decrypt(cipher_text, key)
     return jsonify({"decrypted_message": decrypted})
 
+
+# Playfair Cipher (khởi tạo mỗi lần theo key người dùng)
 @app.route("/api/playfair/encrypt", methods=["POST"])
 def playfair_encrypt():
     data = request.json
     plain_text = data["plain_text"]
-    encrypted = playfair_cipher.encrypt(plain_text)
+    key = data["key"]
+    cipher = PlayfairCipher(key)
+    encrypted = cipher.encrypt(plain_text)
     return jsonify({"encrypted_message": encrypted})
 
 @app.route("/api/playfair/decrypt", methods=["POST"])
 def playfair_decrypt():
     data = request.json
     cipher_text = data["cipher_text"]
-    decrypted = playfair_cipher.decrypt(cipher_text)
-    return jsonify({"decrypted_message": decrypted})
-
-@app.route("/api/transposition/encrypt", methods=["POST"])
-def trans_encrypt():
-    data = request.json
-    plain_text = data["plain_text"]
-    key = int(data["key"])
-    encrypted = trans_cipher.encrypt(plain_text, key)
-    return jsonify({"encrypted_message": encrypted})
-
-@app.route("/api/transposition/decrypt", methods=["POST"])
-def trans_decrypt():
-    data = request.json
-    cipher_text = data["cipher_text"]
-    key = int(data["key"])
-    decrypted = trans_cipher.decrypt(cipher_text, key)
+    key = data["key"]
+    cipher = PlayfairCipher(key)
+    decrypted = cipher.decrypt(cipher_text)
     return jsonify({"decrypted_message": decrypted})
 
 

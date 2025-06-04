@@ -17,13 +17,14 @@ class VigenereCipher:
         encrypted = []
 
         for i in range(len(text)):
-            if text[i] in self.alphabet:
-                t_idx = self.alphabet.index(text[i])
+            char = text[i]
+            if char.isalpha() and char in self.alphabet:
+                t_idx = self.alphabet.index(char)
                 k_idx = self.alphabet.index(extended_key[i])
                 encrypted_char = self.alphabet[(t_idx + k_idx) % 26]
                 encrypted.append(encrypted_char)
             else:
-                encrypted.append(text[i])  # giữ nguyên ký tự đặc biệt
+                encrypted.append(char)  # giữ ký tự đặc biệt
 
         return "".join(encrypted)
 
@@ -33,12 +34,19 @@ class VigenereCipher:
         decrypted = []
 
         for i in range(len(cipher_text)):
-            if cipher_text[i] in self.alphabet:
-                c_idx = self.alphabet.index(cipher_text[i])
+            char = cipher_text[i]
+            if char.isalpha() and char in self.alphabet:
+                c_idx = self.alphabet.index(char)
                 k_idx = self.alphabet.index(extended_key[i])
                 decrypted_char = self.alphabet[(c_idx - k_idx + 26) % 26]
                 decrypted.append(decrypted_char)
             else:
-                decrypted.append(cipher_text[i])
+                decrypted.append(char)
 
         return "".join(decrypted)
+
+    def encrypt_text(self, text, key):
+        return self.encrypt(text, key)
+
+    def decrypt_text(self, text, key):
+        return self.decrypt(text, key)

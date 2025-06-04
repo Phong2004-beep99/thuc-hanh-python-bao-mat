@@ -6,16 +6,13 @@ class PlayfairCipher:
         key = key.upper().replace('J', 'I')
         matrix = []
         used = set()
-
         for char in key:
             if char not in used and char.isalpha():
                 used.add(char)
                 matrix.append(char)
-
         for char in "ABCDEFGHIKLMNOPQRSTUVWXYZ":
             if char not in used:
                 matrix.append(char)
-
         return [matrix[i:i+5] for i in range(0, 25, 5)]
 
     def find_position(self, char):
@@ -47,7 +44,6 @@ class PlayfairCipher:
             a, b = pair[0], pair[1]
             row1, col1 = self.find_position(a)
             row2, col2 = self.find_position(b)
-
             if row1 == row2:
                 cipher_text += self.matrix[row1][(col1 + 1) % 5]
                 cipher_text += self.matrix[row2][(col2 + 1) % 5]
@@ -66,7 +62,6 @@ class PlayfairCipher:
             a, b = pair[0], pair[1]
             row1, col1 = self.find_position(a)
             row2, col2 = self.find_position(b)
-
             if row1 == row2:
                 plain_text += self.matrix[row1][(col1 - 1) % 5]
                 plain_text += self.matrix[row2][(col2 - 1) % 5]
@@ -77,3 +72,10 @@ class PlayfairCipher:
                 plain_text += self.matrix[row1][col2]
                 plain_text += self.matrix[row2][col1]
         return plain_text
+
+    
+    def encrypt_text(self, text):
+        return self.encrypt(text)
+
+    def decrypt_text(self, text):
+        return self.decrypt(text)

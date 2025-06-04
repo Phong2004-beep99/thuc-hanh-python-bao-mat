@@ -10,7 +10,6 @@ class RailFenceCipher:
         for idx, char in enumerate(text):
             fence[rail][idx] = char
             rail += direction
-
             if rail == 0 or rail == rails - 1:
                 direction *= -1
 
@@ -48,3 +47,10 @@ class RailFenceCipher:
                 direction *= -1
 
         return ''.join(result)
+
+   
+    def encrypt_text(self, text, key):
+        return self.encrypt(text, key)
+
+    def decrypt_text(self, text, key):
+        return self.decrypt(text, key)
